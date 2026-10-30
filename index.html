@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стеллаж 6000×700×1800 — чертёж ИС-6000.00.00 СБ</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #eef0f3; color: #14181d;
+         font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  header { background: #1d2127; color: #fff; padding: 22px 28px; }
+  header h1 { margin: 0 0 4px; font-size: 21px; font-weight: 650; letter-spacing: .2px; }
+  header p { margin: 0; color: #b9c0c9; font-size: 13px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 20px 56px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
+  .bar a { display: inline-block; padding: 10px 16px; border-radius: 8px; text-decoration: none;
+           font-weight: 600; font-size: 14px; background: #2f6fed; color: #fff; }
+  .bar a.alt { background: #fff; color: #1d2127; border: 1px solid #cfd5dd; }
+  .bar a:hover { filter: brightness(1.05); }
+  .sheet { background: #fff; border: 1px solid #d7dce3; border-radius: 12px; margin: 0 0 22px;
+           overflow: hidden; box-shadow: 0 6px 22px rgba(16, 24, 40, .06); }
+  .sheet h2 { margin: 0; padding: 12px 16px; font-size: 15px; background: #f7f8fa;
+              border-bottom: 1px solid #e6e9ee; }
+  .sheet h2 span { color: #6b7280; font-weight: 400; }
+  .sheet img { display: block; width: 100%; height: auto; }
+  .note { background: #fff8e6; border: 1px solid #f0dfae; border-radius: 10px; padding: 14px 16px;
+          font-size: 13.5px; margin: 0 0 22px; }
+  .note b { color: #7a5a00; }
+  footer { color: #6b7280; font-size: 12.5px; text-align: center; padding: 0 20px 30px; }
+  code { background: #eceff3; padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Инструментальный стеллаж 6000 × 700 × 1800</h1>
+  <p>Чертёж ИС-6000.00.00 СБ · 4 листа A3 · уголок 45×45×4, лист 1,5 мм · масса ≈ 659 кг</p>
+</header>
+<main>
+  <div class="bar">
+    <a href="out/stellazh-6000x700x1800.vsdx" download>Скачать .vsdx (Visio)</a>
+    <a class="alt" href="out/stellazh-6000x700x1800.pdf">Открыть PDF (4 листа)</a>
+    <a class="alt" href="https://github.com/AlexBae2/stellazh-6000">Репозиторий</a>
+  </div>
+
+  <div class="note">
+    <b>Про формат Visio.</b> GitHub не умеет показывать .vsdx в браузере — по ссылке файл
+    скачивается. Открыть его можно в Visio 2013+ (Windows), в Visio для веба (нужна учётная
+    запись Microsoft и загрузка в OneDrive/SharePoint) или импортом в OmniGraffle / LibreOffice Draw.
+    Всё, что нужно для печати и отправки мастеру, есть в PDF: браузер покажет его сразу.
+  </div>
+
+  <div class="sheet">
+    <h2>Лист 1 <span>— общий вид, 1:25</span></h2>
+    <img src="out/preview/list-1.png" alt="Лист 1 — общий вид">
+  </div>
+  <div class="sheet">
+    <h2>Лист 2 <span>— секция и узлы, 1:10 / 1:2,5 / 1:1 / 1:5</span></h2>
+    <img src="out/preview/list-2.png" alt="Лист 2 — секция и узлы">
+  </div>
+  <div class="sheet">
+    <h2>Лист 3 <span>— спецификация и технические требования</span></h2>
+    <img src="out/preview/list-3.png" alt="Лист 3 — спецификация и ТТ">
+  </div>
+  <div class="sheet">
+    <h2>Лист 4 <span>— детали и заготовки</span></h2>
+    <img src="out/preview/list-4.png" alt="Лист 4 — детали">
+  </div>
+
+  <div class="note">
+    Чертёж параметрический: размеры заданы в <code>model.py</code>, листы рисует <code>build.py</code>,
+    пакет .vsdx собирает <code>vsd.py</code>. Пересборка: <code>python3 build.py out/stellazh-6000x700x1800.vsdx</code>.
+  </div>
+</main>
+<footer>ИС-6000.00.00 СБ · 2026 · размеры в мм</footer>
+</body>
+</html>
