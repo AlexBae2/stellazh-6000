@@ -61,6 +61,7 @@ class Page:
         self._id = 0
         self._order: list[tuple[int, str]] = []
         self._z = 0
+        self.items: list[tuple] = []
 
     # ---------- служебное ----------
     def _shape(self, body: str, z: int | None = None) -> None:
@@ -96,6 +97,7 @@ class Page:
                 f"<Cell N='X' V='{num((pts[0][0] - bx) * MM)}'/>"
                 f"<Cell N='Y' V='{num((by + bh - pts[0][1]) * MM)}'/></Row>"
             )
+        self.items.append(("line", tuple(pts), lw))
         no_line = 1 if lw <= 0 else 0
         geom = (
             f"<Section N='Geometry' IX='0'><Cell N='NoFill' V='{0 if fill else 1}'/>"
@@ -151,6 +153,21 @@ class Page:
             by = y - h / 2
         else:
             by = y - h
+        vis = min(est, width) if width else est
+        if align == "left":
+            tx0, tx1 = x, x + vis
+        elif align == "center":
+            tx0, tx1 = x - vis / 2, x + vis / 2
+        else:
+            tx0, tx1 = x - vis, x
+        th = size * 1.15
+        if valign == "top":
+            ty0, ty1 = y, y + th
+        elif valign == "middle":
+            ty0, ty1 = y - th / 2, y + th / 2
+        else:
+            ty0, ty1 = y - th, y
+        self.items.append(("text", (tx0, ty0, tx1, ty1), s, size, angle))
         style = (1 if bold else 0) | (2 if italic else 0)
         halign = {"left": 0, "center": 1, "right": 2, "justify": 3}[align]
         body = (

@@ -26,7 +26,7 @@ def sheet1() -> Sheet:
     Z = lambda v: fy + (P["H"] - v) / sc
 
     s.text(22, 12, "СТЕЛЛАЖ ИНСТРУМЕНТАЛЬНЫЙ 6000 × 700 × 1800", 5.0, "left", bold=True)
-    s.text(22, 18, "Общий вид. Сборочный чертёж", 2.8, "left")
+    s.text(22, 19, "Общий вид. Сборочный чертёж", 2.8, "left")
     s.text(410, 13, DESIGNATION, 4.0, "right", bold=True)
 
     # --- вид спереди ---
@@ -103,7 +103,7 @@ def sheet1() -> Sheet:
     s.leader(sx + 12, sy + 0.9, 312, 54, "6", shelf=0, side="left")
     s.leader(sx + 12, sy + P["H"] / sc - 0.9, 312, 126, "7", shelf=0, side="left")
     s.leader(sx + 12, sy + P["H"] / sc / 2, 312, 92, "8", shelf=0, side="left")
-    s.text(sx + sw / 2, sy + P["H"] / sc + 12, "А–А", 2.6, "center", bold=True)
+    s.text(sx + sw / 2, sy + P["H"] / sc + 17, "А–А", 2.6, "center", bold=True)
 
     rows = [["Поз.", "Наименование", "Кол."],
             ["1", "Стойка L45×45×4, L=1800", "15"],
@@ -148,7 +148,7 @@ def sheet2() -> Sheet:
     s = Sheet("2. Секция и узлы")
 
     s.text(22, 12, "СЕКЦИЯ 2000 × 700 × 1800. РАЗРЕЗ И УЗЛЫ", 4.5, "left", bold=True)
-    s.text(22, 18, "Секция типовая, 3 шт. в изделии; стык секций — узел Б", 2.6, "left")
+    s.text(22, 19, "Секция типовая, 3 шт. в изделии; стык секций — узел Б", 2.6, "left")
     s.text(410, 13, DESIGNATION, 4.0, "right", bold=True)
 
     # ================= секция без дверей, 1:10 =================
@@ -174,15 +174,19 @@ def sheet2() -> Sheet:
 
     # подписи поверх каркаса
     for z0, z1 in ((a, P["rowH"] - a / 2), (P["rowH"] + a / 2, P["H"] - a)):
-        s.text(X(P["pitch"] / 2), Z((z0 + z1) / 2) - 6.5, "задняя стенка (поз. 5)", 2.0, "center")
+        s.text(X(P["pitch"] / 2), Z(z1) + 4.0, "задняя стенка (поз. 5)", 2.0, "center")
+        for i in range(P["cells"]):
+            light = 432.5 if i in (0, P["cells"] - 1) else 455.0
+            s.text(X(i * P["pitch"] + P["pitch"] / 2), Z((z0 + z1) / 2),
+                   f"свет {fmt(light, 1).replace(',0', '')} × 855", 1.9, "center")
 
     for i in range(P["cells"]):
         s.dim_h(X(i * P["pitch"]), X((i + 1) * P["pitch"]), 36, "500", Z(P["H"]), size=2.0)
-        s.dim_v(27, Z(P["rowH"]), Z(0), "900", X(0))
+    s.dim_v(27, Z(P["rowH"]), Z(0), "900", X(0))
     s.dim_v(27, Z(P["H"]), Z(P["rowH"]), "900", X(0))
 
     # позиции 1 и 2 — короткие выноски с полками внутри ячеек
-    s.leader(X(1000) + a / 2, Z(1500), X(1000) + 14, Z(1500), "1", shelf=7, side="right")
+    s.leader(X(1000 + a / 2), Z(1500), X(1000) + 14, Z(1500), "1", shelf=7, side="right")
     s.leader(X(1250), Z(P["H"] - a / 2), X(1250), Z(1690), "2", shelf=7, side="right")
 
     # ================= разрез А–А, 1:10 =================
@@ -196,13 +200,12 @@ def sheet2() -> Sheet:
     s.rect(BX(P["D"] - a), BZ(P["H"]), a / sc, P["H"] / sc, lw=0.35, fill="#FFFFFF")
     for z in (0.0, P["rowH"] - a / 2, P["H"] - a):
         s.rect(BX(a), BZ(z + a), P["tieLen"] / sc, a / sc, lw=0.3, fill="#FFFFFF")
-    s.line(BX(5), BZ(P["H"] - 40), BX(5), BZ(40), 0.25, dash=4)
-    s.text(BX(8.5), BZ(P["H"] / 2), "дверь", 1.8, "center", angle=math.pi / 2)
+    s.line(BX(1), BZ(P["H"] - 40), BX(1), BZ(40), 0.25, dash=4)
     s.dim_h(BX(0), BX(P["D"]), 36, "700", BZ(P["H"]), size=3.0)
     s.dim_v(238, BZ(P["H"]), BZ(0), "1800", BX(0), size=2.6)
 
-    s.text(BX(P["D"] / 2), BZ(P["H"]) + 3.2, "крышка", 1.9, "center")
-    s.text(BX(P["D"] / 2), BZ(0) - 1.2, "днище", 1.9, "center")
+    s.text(BX(P["D"] / 2), BZ(P["H"] - 60), "крышка", 1.9, "center")
+    s.text(BX(P["D"] / 2), BZ(80), "днище", 1.9, "center")
     s.text(BX(P["D"] / 2), BZ(P["rowH"] - a / 2) + 3.2, "перекрытие", 1.9, "center")
     s.text(BX(P["D"] - a - 3), BZ(1200), "задняя стенка", 1.7, "center", angle=math.pi / 2)
 
@@ -235,8 +238,11 @@ def sheet2() -> Sheet:
         "Контрольная сборка 6000 мм на стенде до окраски.",
     ], size=2.0, leading=4.2)
 
-    s.text(tx, 163, "Покрытие", 2.6, "left", bold=True)
-    s.notes(tx, 168, [
+    s.text(tx, 162, "Обозначения", 2.6, "left", bold=True)
+    s.text(tx, 167, "Штриховой контур на разрезе — дверь.", 2.0, "left")
+
+    s.text(tx, 175, "Покрытие", 2.6, "left", bold=True)
+    s.notes(tx, 180, [
         "Обезжирить, зачистить, грунт + порошковая краска.",
         "Цвет RAL 7035 (или по согласованию с заказчиком).",
     ], size=2.0, leading=4.2)
@@ -255,6 +261,7 @@ def sheet2() -> Sheet:
     s.poly([(ox, oy), (ox + 45 / k, oy), (ox + 45 / k, oy + 4 / k), (ox + 4 / k, oy + 4 / k),
             (ox + 4 / k, oy + 45 / k), (ox, oy + 45 / k)], lw=0.35, fill="#DDDDDD")
     s.rect(ox + 4 / k, oy + 4 / k, 1.5 / k, 12 / k, lw=0.2, fill="#000000")
+    s.line(ox + 45 / k, oy, ox + 45 / k, oy + 45 / k + 4.6, LW_THIN)
     s.dim_h(ox, ox + 45 / k, oy + 45 / k + 4.6, "45", oy + 45 / k, size=1.8, side="above")
     s.text(ox + 45 / k + 3.5, oy + 3.0, "L45×45×4", 1.8, "left")
     s.text(ox + 45 / k + 3.5, oy + 7.0, "лист 1,5", 1.8, "left")
@@ -267,7 +274,6 @@ def sheet2() -> Sheet:
     w45 = 45 / k
     s.rect(ox2, oy2, w45, w45, lw=0.35, fill="#DDDDDD")
     s.rect(ox2 + w45 + 0.8, oy2, w45, w45, lw=0.35, fill="#DDDDDD")
-    s.line(ox2, oy2 - 1.6, ox2 + 2 * w45 + 0.8, oy2 - 1.6, 0.2, dash=4)
     s.line(ox2 + w45, oy2 + 0.3, ox2 + w45 + 0.8, oy2 + 0.3, 0.2, dash=4)
     s.circle(ox2 + w45 + 0.4, oy2 + w45 / 2, 4 / k, lw=0.25, fill="#FFFFFF")
     s.dim_h(ox2, ox2 + 2 * w45 + 0.8, oy2 + w45 + 4.6, "90", oy2 + w45, size=1.8, side="above")
@@ -277,7 +283,7 @@ def sheet2() -> Sheet:
     # --- В: дверь, сечение 1:1 ---
     ny3, nh3 = 257.0, 32.0
     node(24.0, ny3, 108, nh3, "В. Дверь, сечение 1:1")
-    dx, dy = 27.0, ny3 + 8
+    dx, dy = 31.0, ny3 + 8
     s.rect(dx, dy, 40, 1.5, lw=0.35, fill="#000000")
     s.rect(dx, dy, 1.5, 20, lw=0.35, fill="#000000")
     s.rect(dx + 38.5, dy, 1.5, 20, lw=0.35, fill="#000000")
@@ -308,7 +314,7 @@ def sheet3() -> Sheet:
     s = Sheet("3. Спецификация")
 
     s.text(22, 12, "СПЕЦИФИКАЦИЯ. ТЕХНИЧЕСКИЕ ТРЕБОВАНИЯ", 4.5, "left", bold=True)
-    s.text(22, 18, "Ведомость составных частей, материалов и требований к изготовлению", 2.6, "left")
+    s.text(22, 19, "Ведомость составных частей, материалов и требований к изготовлению", 2.6, "left")
     s.text(410, 13, DESIGNATION, 4.0, "right", bold=True)
 
     # ---------------- детали ----------------
@@ -412,7 +418,7 @@ def sheet4() -> Sheet:
     s = Sheet("4. Детали")
 
     s.text(22, 12, "ДЕТАЛИ И ЗАГОТОВКИ", 4.5, "left", bold=True)
-    s.text(22, 18, "Размеры для раскроя и гибки; развёртки даны по осевой линии", 2.6, "left")
+    s.text(22, 19, "Размеры для раскроя и гибки; развёртки даны по осевой линии", 2.6, "left")
     s.text(410, 13, DESIGNATION, 4.0, "right", bold=True)
 
     # ---------- дверь 1:15 ----------
@@ -424,25 +430,25 @@ def sheet4() -> Sheet:
     s.rect(dx + 1.2, dy + 1.2, dw - 2.4, dh - 2.4, lw=0.15, dash=2)
     for q in (0.12, 0.5, 0.88):
         s.rect(dx - 2.2, dy + q * dh - 1.0, 2.2, 2.0, lw=0.2, fill="#DDDDDD")
-    s.rect(dx + dw - 7, dy + dh / 2 - 4.5, 7, 9, lw=0.3)
-    s.circle(dx + dw - 3.5, dy + dh / 2, 0.9, lw=0.2)
+    s.rect(dx + dw - 5.5, dy + dh / 2 - 3.2, 5.5, 6.4, lw=0.3)
+    s.circle(dx + dw - 2.8, dy + dh / 2, 0.7, lw=0.2)
     s.dim_h(dx, dx + dw, dy + dh + 6, "497", dy + dh, size=2.2, side="below")
     s.dim_v(dx + dw + 8, dy, dy + dh, "897", dx + dw, size=2.2, side="right")
-    s.text(dx, dy + dh + 11, "лист 1,5; отгиб 20 по четырём сторонам, R5;", 1.9, "left")
-    s.text(dx, dy + dh + 15, "петли накладные 80 мм — 3 шт.; замок врезной.", 1.9, "left")
+    s.text(dx, dy + dh + 14, "лист 1,5; отгиб 20 по четырём сторонам, R5;", 1.9, "left")
+    s.text(dx, dy + dh + 18, "петли накладные 80 мм — 3 шт.; замок врезной.", 1.9, "left")
 
     # ---------- стойка, фрагмент 1:2 ----------
     s.text(88, 27, "Стойка (поз. 1), фрагмент 1:2", 3.0, "left", bold=True)
-    sx, sy, ks = 92.0, 36.0, 2.0
+    sx, sy, ks = 92.0, 40.0, 2.0
     s.poly([(sx, sy), (sx + 45 / ks, sy), (sx + 45 / ks, sy + 4 / ks), (sx + 4 / ks, sy + 4 / ks),
             (sx + 4 / ks, sy + 90 / ks), (sx, sy + 90 / ks)], lw=0.4, fill="#EEEEEE")
     s.dim_h(sx, sx + 45 / ks, sy - 2.0, "45", sy, size=2.0, side="above")
     s.dim_v(sx - 4, sy, sy + 90 / ks, "90", sx, size=1.9)
-    s.text(sx + 30, sy + 6, "L = 1800, 15 шт.", 2.1, "left")
-    s.text(sx + 30, sy + 11, "торцы под 90°,", 2.1, "left")
-    s.text(sx + 30, sy + 15.5, "заусенцы снять", 2.1, "left")
-    s.text(sx + 30, sy + 22, "уголок 45×45×4", 2.1, "left")
-    s.text(sx + 30, sy + 26.5, "ГОСТ 8509-93", 2.1, "left")
+    s.text(sx + 30, sy + 4, "L = 1800, 15 шт.", 2.1, "left")
+    s.text(sx + 30, sy + 9, "торцы под 90°,", 2.1, "left")
+    s.text(sx + 30, sy + 13.5, "заусенцы снять", 2.1, "left")
+    s.text(sx + 30, sy + 20, "уголок 45×45×4", 2.1, "left")
+    s.text(sx + 30, sy + 24.5, "ГОСТ 8509-93", 2.1, "left")
 
     # ---------- перекладина 1:10 ----------
     s.text(215, 27, "Перекладина (поз. 2), 1:10", 3.0, "left", bold=True)
@@ -453,7 +459,7 @@ def sheet4() -> Sheet:
     s.text(rx, ry + 9, "18 шт.; отверстия Ø9 под М8 — по месту, узел Б", 1.9, "left")
 
     # ---------- связь 1:5 ----------
-    s.text(215, 58, "Связь по глубине (поз. 3), 1:5", 3.0, "left", bold=True)
+    s.text(215, 54, "Связь по глубине (поз. 3), 1:5", 3.0, "left", bold=True)
     tx0, ty0 = 218.0, 64.0
     tw = P["tieLen"] / 5
     s.rect(tx0, ty0, tw, 9.0, lw=0.35, fill="#EEEEEE")

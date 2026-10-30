@@ -92,11 +92,11 @@ class Sheet(Page):
             if shelf:
                 sx = -shelf if side == "left" else shelf
                 self.line(x2, y2, x2 + sx, y2, LW_THIN)
-                self.text(x2 + sx + (0.8 if side == "right" else -0.8), y2 - 0.8, text, size,
-                          "left" if side == "right" else "right")
+                self.text(x2 + sx + (0.8 if side == "right" else -0.8), y2 - 0.4, text, size,
+                          "left" if side == "right" else "right", valign="bottom")
             else:
-                self.text(x2 + (0.8 if side == "right" else -0.8), y2 - 0.8, text, size,
-                          "left" if side == "right" else "right")
+                self.text(x2 + (0.8 if side == "right" else -0.8), y2 - 0.4, text, size,
+                          "left" if side == "right" else "right", valign="bottom")
 
     # ---------- таблица ----------
     def table(self, x, y, widths, rows, row_h, size=2.5, header_rows=1, header_fill="#EEEEEE",
@@ -165,7 +165,9 @@ class Sheet(Page):
             lx.append(lx[-1] + c)
         self.line(lx[-1], y0, lx[-1], y0 + h, lw=0.5)
         self.line(x0, y0 + 5, lx[-1], y0 + 5, lw=0.35)
-        for i in range(1, 5):
+        # первая вертикаль (Изм./Лист) — только в шапке: ниже графы «Разраб.», «Пров.» идут во всю ширину
+        self.line(lx[1], y0, lx[1], y0 + 5, lw=0.25)
+        for i in range(2, 5):
             self.line(lx[i], y0 + 5, lx[i], y0 + h, lw=0.25)
         for r in range(1, 5):
             self.line(x0, y0 + 5 + r * 10, lx[-1], y0 + 5 + r * 10, lw=0.25)
@@ -180,9 +182,9 @@ class Sheet(Page):
 
         # правая часть 120 мм: наименование 70 + литера/масса/масштаб 50
         xr = lx[-1]
-        self.line(x0, y0 + 15, x0 + w, y0 + 15, lw=0.35)
-        self.line(x0, y0 + 30, x0 + w, y0 + 30, lw=0.3)
-        self.line(x0, y0 + 45, x0 + w, y0 + 45, lw=0.3)
+        self.line(xr, y0 + 15, x0 + w, y0 + 15, lw=0.35)
+        self.line(xr, y0 + 30, x0 + w, y0 + 30, lw=0.3)
+        self.line(xr, y0 + 45, x0 + w, y0 + 45, lw=0.3)
         self.line(xr + 70, y0 + 15, xr + 70, y0 + 45, lw=0.3)
         self.line(xr + 80, y0 + 15, xr + 80, y0 + 30, lw=0.25)
         self.line(xr + 100, y0 + 15, xr + 100, y0 + 30, lw=0.25)
@@ -211,5 +213,6 @@ class Sheet(Page):
         self.text(xr + 82.5, y0 + 41.6, str(sheet), 4.2, "center", bold=True, valign="middle")
         self.text(xr + 107.5, y0 + 41.6, str(sheets), 4.2, "center", bold=True, valign="middle")
 
+        self.text(xr + 2, y0 + 33.2, "Материал — по спецификации, лист 3", 1.9, "left", valign="top", width=66)
         self.text(xr + 2, y0 + 46.6, org, 2.2, "left", valign="top", width=66)
         self.text(xr + 110, y0 + 47.4, f"Формат {format_}", 2.2, "center", valign="middle")
